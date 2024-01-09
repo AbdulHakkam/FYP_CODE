@@ -1,0 +1,25 @@
+{
+  "version": "VERSION",
+  "vulnerabilities": [
+    {
+      "cve": {
+        "vulnInformation$": {
+          "id": "CVE"
+        },
+        "descriptions": [
+          {
+            "value": "DESCRIPTION"
+          }
+        ],
+        "references": [
+          {
+            "url": "REFERENCES"
+          }
+        ],
+        "metrics": {
+          "cvssMetricV2": [{ "baseSeverity": "SEVERITY" }]
+        }
+      }
+    }
+  ]
+}

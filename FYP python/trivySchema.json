@@ -1,0 +1,15 @@
+{
+  "Results": [
+    {
+      "Target": "KEY_NAME_1",
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID$": "CVE",
+          "Severity": "SEVERITY",
+          "Description": "DESCRIPTION",
+          "References": "REFERENCES"
+        }
+      ]
+    }
+  ]
+}
