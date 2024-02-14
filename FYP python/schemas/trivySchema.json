@@ -1,0 +1,19 @@
+{
+  "Results": [
+    {
+      "Vulnerabilities": [
+        {
+          "InstalledVersion$": "installedVersion",
+          "PkgName": "pkgName",
+          "Title": "title",
+          "CVSS": {
+            "nvd": {
+              "V2Vector": "v2Vector"
+            }
+          },
+          "PublishedDate": "publishedDate"
+        }
+      ]
+    }
+  ]
+}

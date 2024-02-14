@@ -1,0 +1,13 @@
+{
+  "data": [
+    {
+      "severity$": "Severity",
+      "summary": "Description",
+      "component_versions": {
+        "more_details": {
+          "cves": [{ "cve": "CVE" }]
+        }
+      }
+    }
+  ]
+}

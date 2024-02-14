@@ -1,0 +1,13 @@
+{
+  "artifacts": [
+    {
+      "issues": [
+        {
+          "issue_type$": "Severity",
+          "description": "Description",
+          "cves": [{ "cve": "CVE" }]
+        }
+      ]
+    }
+  ]
+}
