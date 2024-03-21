@@ -1,0 +1,21 @@
+{
+  "vulnerabilities": [
+    {
+      "cve": {
+        "id$": "CVE",
+        "descriptions": [
+          {
+            "value": "DESCRIPTION"
+          }
+        ],
+        "metrics": {
+          "cvssMetricV2": [
+            {
+              "baseSeverity": "SEVERITY"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

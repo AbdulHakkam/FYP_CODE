@@ -1,6 +1,7 @@
 import csv
 import json
 import xmltodict
+import numpy as np
 
 def csv_to_json (csv_file_path, json_file_path):
     with open(csv_file_path, encoding='utf-8') as csvf: 
@@ -36,3 +37,19 @@ def xml_to_json(xml_file_path, json_file_path):
         doc = xmltodict.parse(fd.read())
     with open(json_file_path, 'w', encoding='utf-8') as jsonf: 
         jsonf.write(json.dumps(doc, indent=4))
+
+
+
+def average_word_vectors(words, model, vocabulary, num_features):
+    feature_vector = np.zeros((num_features,), dtype="float64")
+    n_words = 0
+
+    for word in words:
+        if word in vocabulary:
+            n_words += 1
+            feature_vector = np.add(feature_vector, model.wv[word])
+
+    if n_words > 0:
+        feature_vector = np.divide(feature_vector, n_words)
+
+    return feature_vector

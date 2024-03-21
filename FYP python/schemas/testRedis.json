@@ -1,0 +1,13 @@
+{
+  "Results": [
+    {
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID$": "CVE",
+          "Description": "DESCRIPTION",
+          "severity": "SEVERITY"
+        }
+      ]
+    }
+  ]
+}

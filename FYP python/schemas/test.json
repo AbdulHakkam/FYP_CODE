@@ -1,0 +1,17 @@
+{
+  "data": [
+    {
+      "component_versions": {
+        "more_details": {
+          "cves": [
+            {
+              "cve": "CVE"
+            }
+          ],
+          "description": "DESCRIPTION"
+        }
+      },
+      "severity": "SEVERITY"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "artifacts": [
+    {
+      "issues": [
+        {
+          "summary$": "DESCRIPTION",
+          "severity": "SEVERITY",
+          "cves": [
+            {
+              "cve": "CVE"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
