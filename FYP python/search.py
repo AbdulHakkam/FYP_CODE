@@ -20,6 +20,12 @@ map = {
     }
 }
 
+non_outliers = []
+
+keys_checked = 0
+
+
+
 iso_forest_model = joblib.load('models/anomaly_detector_v3.joblib')
 
 w2vModel = joblib.load('models/word2vec_lower.joblib')
@@ -29,6 +35,7 @@ vocab_wv = w2vModel.wv.index_to_key
 
 
 def parse( data, path=''):
+    global keys_checked
     # Handle the case where data is a list and not an object
     if isinstance(data, list):
         data = {
@@ -66,10 +73,10 @@ def parse( data, path=''):
             tokenized_test = [text.split() for text in [val]]
             vectorized_test = [utils.average_word_vectors(text, w2vModel, vocab_wv, 100) for text in tokenized_test]
             is_outlier = iso_forest_model.predict(vectorized_test)[0] == -1
+            keys_checked += 1
             if not is_outlier:
-                print(val)
-                prediction = classifier.predict([val])[0]
-                print(prediction)
+                prediction = classifier.predict([val], verbose = 0)[0]
+                non_outliers.append(newPath)
                 highest = max(prediction)
                 index_of_highest = prediction.tolist().index(highest)
                 if index_of_highest == 0 and highest > map["CVE"]["score"]:
@@ -112,20 +119,78 @@ def generateSchema():
             current[last_part] = key 
     return result
 
-parser = argparse.ArgumentParser()
 
-parser.add_argument('--input', '-i', type=str, required=True, help='Input file path')
-parser.add_argument('--output', '-o', type=str,required=True, help='Output file path')
-args = parser.parse_args()
+def sortMap():
+    sorted_keys = sorted(map, key=lambda k: len(map[k]['path'].split('...')))
+    map = {k: map[k] for k in sorted_keys}
+    map[sorted_keys[0]]['path'] = map[sorted_keys[0]]['path'] + '$'
 
-with open(args.input, 'r',encoding="utf8") as data_file:
-        # Load JSON data from file
-        data = json.load(data_file)
-        parse(data)
-sorted_keys = sorted(map, key=lambda k: len(map[k]['path'].split('...')))
-map = {k: map[k] for k in sorted_keys}
-map[sorted_keys[0]]['path'] = map[sorted_keys[0]]['path'] + '$'
-schema = generateSchema()
+def clear():
+    global map
+    global non_outliers
+    global keys_checked
+    map = {
+        "CVE":{
+            "path":'',
+            "score":0
+        },
+        "DESCRIPTION":{
+            "path":'',
+            "score":0
+        },
+        "SEVERITY":{
+            "path":'',
+            "score":0
+        }
+    }
+    non_outliers = []
+    keys_checked = 0
 
-with open(args.output, 'w') as json_file:
-    json.dump(schema,json_file, indent=2)
+def evaluate():
+    eval_files = [
+        {
+            "path":'reports/blackduck.json',
+            "valid_paths":["data[]...Vulnerability id","data[]...Description","data[]...Severity","data[]...Security Risk"]
+        },
+        {
+            "path":'reports/jfrog.json',
+            "valid_paths":['data[]...component_versions...more_details...cves[]...cve','data[]...component_versions...more_details...description','data[]...severity']
+        },
+        {
+            "path":'reports/jfrogArtifact.json',
+            "valid_paths":["artifacts[]...issues[]...description","artifacts[]...issues[]...severity","artifacts[]...issues[]...cves[]...cve","artifacts[]...issues[]...summary"]
+        },
+        {
+            "path":'reports/mongo_1.json',
+            "valid_paths":["Results[]...Vulnerabilities[]...VulnerabilityID","Results[]...Vulnerabilities[]...Description", "Results[]...Vulnerabilities[]...Severity"]
+        },
+                {
+            "path":'reports/postgres_1.json',
+            "valid_paths":["Results[]...Vulnerabilities[]...VulnerabilityID","Results[]...Vulnerabilities[]...Description", "Results[]...Vulnerabilities[]...Severity"]
+        }
+
+    ]
+
+    for file in eval_files:
+        with open(file['path']) as f:
+            data = json.load(f)
+            parse(data)
+            invalid_paths=0
+            initial = len(non_outliers)
+
+            for path in file['valid_paths']:
+                if path in non_outliers:
+                    non_outliers.remove(path)
+
+            for data in map:
+                if map[data]['path'] not in file['valid_paths']:
+                    invalid_paths+=1    
+        
+            print("Outlier detection accuracy for  = ",[file['path']], (len(non_outliers)/initial)*100, "%")
+            if invalid_paths > 0:
+                print("Invalid paths in schema = ", invalid_paths)
+            else :
+                print("Schema is valid")
+            clear()
+
+evaluate()

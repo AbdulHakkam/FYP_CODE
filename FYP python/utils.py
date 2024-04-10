@@ -11,13 +11,7 @@ def csv_to_json (csv_file_path, json_file_path):
         jsonf.write(json.dumps(data, indent=4))
 
 def get_json_key_paths(json_obj, path=''):
-    """
-    Recursively find all paths to keys in a JSON object.
 
-    :param json_obj: The JSON object (dict or list)
-    :param path: The current path being processed
-    :return: A list of paths to keys
-    """
     key_paths = []
 
     if isinstance(json_obj, dict):
